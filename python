@@ -1,0 +1,27 @@
+EnglishWords = []
+KoreanWords = []
+j = 0
+wrong = 0
+right = 0
+
+num = int(input("몇개의 단어를 시험볼건가요?"))
+
+for i in range(num):
+  english = input("영단어 : ")
+  EnglishWords.append(english)
+  korean = input("뜻 : ")
+  KoreanWords.append(korean)
+
+print("영단어 시험을 시작하겠습니다.")
+
+while j<len(EnglishWords):
+  ui = input(EnglishWords[j])
+  if ui != KoreanWords[j]:
+    print("틀렸습니다.")
+    wrong+=1
+  else:
+    print("맞았습니다.")
+    right+=1
+  j+=1
+print("맞은개수 :",right)
+print("틀린개수 :",wrong)
