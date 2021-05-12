@@ -1,0 +1,22 @@
+#v1
+a = list(map(int, input("input a = ").split(" ")))
+b = list(map(int, input("input b = ").split(" ")))
+res = 0
+
+for i in range(len(a)):
+  res += a[i]*b[i]
+
+print(res)
+
+
+
+
+#v2
+a = []
+b = []
+i = 0
+
+int answer = 0;
+for i in range(len(a)):
+  answer+=int(a[i])*int(b[i])
+  i+=1
