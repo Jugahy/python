@@ -1,0 +1,14 @@
+import requests
+import bs4
+i = 0
+url = "http://www.weather.go.kr/weather/forecast/mid-term-rss3.jsp?stnId=108"
+resp = requests.get(url)   # url 주소에 있는 html 가져오기
+html = resp.content   # 읽어온 부분만 html 변수에 넣겠다
+bs = bs4.BeautifulSoup(html, 'html.parser')
+items = bs.select('data')   # data 다 읽어와
+for i in range(len(items)):
+    print(items[i])
+    i+=1
+for item in items:   # items 에 있는거를 item 에 하나씩 넣어
+    mode = item.find('mode').get_text()   # 나는 mode 필요없고 거기안에있는 글자만 줘
+    print(mode)
