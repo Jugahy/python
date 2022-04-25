@@ -1,0 +1,101 @@
+"""
+주소 : https://finance.naver.com/marketindex/
+환전 고시 환율, 국제 시장 환율, 유가금시세의 이름, 금액, 상승값 또는 하락값, 상승 또는 하락을 크롤링
+"""
+
+
+# 사용할 라이브러리 import
+from typing import Text
+import requests
+from bs4 import BeautifulSoup as bs
+import pandas as pd
+
+# 원하는 정보 갖는 class
+kind = ["head usd","head jpy","head eur","head cny","head jpy_usd","head usd_eur","head usd_gbp","head usd_idx","head wti","head gasoline","head gold_inter","head gold_domestic"]
+
+
+# 정보 list
+name = []
+price = []
+change = []
+price_text = []
+
+
+# 사이트에서 크롤링
+url = "https://finance.naver.com/marketindex/"
+web = requests.get(url)
+soup = bs(web.text, "html.parser")
+
+
+# 이름 가져오기
+for i in range(len(kind)):
+  result = soup.find_all("a", {"class":kind[i]})
+  r = str(result)
+  idx = r.find("</span")
+  r = r[:idx]
+
+  idx = r.find("h_lst")
+  r = r[idx+27:]
+  name.append(r)
+
+
+# 금액 가져오기
+for i in range(len(kind)):
+  result = soup.find_all("a", {"class":kind[i]})
+  r = str(result)
+  idx = r.find("value")
+  r = r[idx+7:]
+
+  idx = r.find("</span")
+  r = r[:idx]
+  price.append(r)
+
+
+# 상승값 또는 하락값 가져오기
+for i in range(len(kind)):
+
+  if i<=7:
+
+    result = soup.find_all("a", {"class":kind[i]})
+    r = str(result)
+
+    idx = r.find("change")
+    r = r[idx+6:]
+
+    idx = r.find("change")
+    r = r[idx+8:]
+
+    idx = r.find("</span")
+    r = r[:idx]
+
+    change.append(r)
+
+  else:
+
+    result = soup.find_all("a", {"class":kind[i]})
+    r = str(result)
+
+    idx = r.find("change")
+    r = r[idx+8:]
+
+    idx = r.find("</span")
+    r = r[:idx]
+
+    change.append(r)
+
+
+# 상승, 하락 가져오기
+for i in range(len(kind)):
+  result = soup.find_all("a", {"class":kind[i]})
+  r = str(result)
+
+  if "상승" in r:
+    price_text.append("상승")
+
+  elif "하락" in r:
+    price_text.append("하락")
+
+
+df = pd.DataFrame({'금액': price, "상승값 또는 하락값": change, "상승 또는 하락": price_text},
+                  index = name)
+df
